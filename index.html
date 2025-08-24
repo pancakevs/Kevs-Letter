@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Amor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fdf2f8;
+            background-image: url('https://picsum.photos/seed/romance/1600/900.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        /* Carta cerrada */
+        .closed-letter {
+            width: 400px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+        
+        .closed-letter:hover {
+            transform: scale(1.02);
+        }
+        
+        .envelope {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #f9a8d4, #f472b6);
+            border-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            filter: drop-shadow(0 4px 8px rgba(225, 29, 72, 0.4));
+        }
+        
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.3) 25%, transparent 25%),
+                        linear-gradient(-45deg, rgba(255,255,255,0.3) 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.3) 75%),
+                        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.3) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            opacity: 0.3;
+        }
+        
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #f9a8d4, #f472b6);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 2;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            filter: drop-shadow(0 4px 8px rgba(225, 29, 72, 0.4));
+        }
+        
+        /* Efecto de brillo en la solapa */
+        .flap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 50%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        
+        .seal {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .seal:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+        
+        .heart {
+            color: #e11d48;
+            font-size: 60px;
+            filter: drop-shadow(0 4px 8px rgba(225, 29, 72, 0.6));
+            animation: heartbeat 1.5s infinite;
+            transform-origin: center;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+        
+        /* Carta abierta */
+        .open-letter {
+            display: none;
+            background-color: #fff;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .paper {
+            position: relative;
+            background-color: #fffbf7;
+            padding: 30px;
+            min-height: 500px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, #f9d4e4 1px, transparent 1px),
+                linear-gradient(to bottom, #f9d4e4 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 42px;
+            color: #be185d;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .top-decoration, .bottom-decoration {
+            position: absolute;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .top-decoration {
+            top: 0;
+        }
+        
+        .bottom-decoration {
+            bottom: 0;
+            transform: rotate(180deg);
+        }
+        
+        .decoration-item {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #d946ef;
+            opacity: 0.7;
+        }
+        
+        .side-decoration {
+            position: absolute;
+            width: 50px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .left-decoration {
+            left: 0;
+        }
+        
+        .right-decoration {
+            right: 0;
+        }
+        
+        .response-container {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .response-btn {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .yes-btn {
+            background-color: #f9a8d4;
+            color: white;
+            box-shadow: 0 4px 10px rgba(249, 168, 212, 0.4);
+        }
+        
+        .yes-btn:hover {
+            background-color: #f472b6;
+            transform: scale(1.05);
+        }
+        
+        .no-btn {
+            background-color: #e9d5ff;
+            color: #7e22ce;
+            box-shadow: 0 4px 10px rgba(196, 181, 253, 0.4);
+        }
+        
+        .no-btn:hover {
+            background-color: #d8b4fe;
+        }
+        
+        .no-btn.shrink {
+            animation: shrink 0.5s forwards;
+        }
+        
+        @keyframes shrink {
+            to {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Modal para respuesta "Sí" */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 36px;
+            color: #be185d;
+            margin-bottom: 20px;
+        }
+        
+        .modal-text {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Carta cerrada -->
+        <div class="closed-letter" id="closedLetter">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="seal" id="seal">
+                    <div class="heart">❤️</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carta abierta -->
+        <div class="open-letter" id="openLetter">
+            <div class="paper">
+                <div class="decorations">
+                    <!-- Decoración superior -->
+                    <div class="top-decoration">
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                    </div>
+                    
+                    <!-- Decoración inferior -->
+                    <div class="bottom-decoration">
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                        <span class="decoration-item">✿</span>
+                        <span class="decoration-item">❀</span>
+                    </div>
+                    
+                    <!-- Decoración lateral izquierda -->
+                    <div class="side-decoration left-decoration">
+                        <span class="decoration-item">❤️</span>
+                        <span class="decoration-item">💕</span>
+                        <span class="decoration-item">❤️</span>
+                        <span class="decoration-item">💕</span>
+                        <span class="decoration-item">❤️</span>
+                    </div>
+                    
+                    <!-- Decoración lateral derecha -->
+                    <div class="side-decoration right-decoration">
+                        <span class="decoration-item">❤️</span>
+                        <span class="decoration-item">💕</span>
+                        <span class="decoration-item">❤️</span>
+                        <span class="decoration-item">💕</span>
+                        <span class="decoration-item">❤️</span>
+                    </div>
+                </div>
+                
+                <h1 class="title">¿Quieres ser mi novia?</h1>
+                
+                <div class="content">
+                    <p>Desde el primer momento en que te vi, supe que había algo especial en ti. Tu sonrisa ilumina mis días y tu presencia hace que mi corazón lata más fuerte.</p>
+                    <p>Cada momento a tu lado es un regalo, y me gustaría tener la oportunidad de compartir muchos más momentos contigo. Por eso, hoy me atrevo a preguntarte...</p>
+                </div>
+                
+                <div class="response-container">
+                    <button class="response-btn yes-btn" id="yesBtn">Sí</button>
+                    <button class="response-btn no-btn" id="noBtn">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para respuesta "Sí" -->
+    <div class="modal" id="yesModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 class="modal-title">¡Gracias por decir que sí!</h2>
+            <p class="modal-text">Prometo hacerte la persona más feliz del mundo. Estoy emocionado por comenzar este viaje juntos y crear recuerdos inolvidables.</p>
+            <p class="modal-text">Te amo más de lo que las palabras pueden expresar.</p>
+            <img src="https://picsum.photos/seed/love/300/200.jpg" alt="Imagen de amor" class="modal-image">
+        </div>
+    </div>
+    
+    <script>
+        // Elementos del DOM
+        const closedLetter = document.getElementById('closedLetter');
+        const openLetter = document.getElementById('openLetter');
+        const seal = document.getElementById('seal');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const yesModal = document.getElementById('yesModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Abrir la carta al hacer clic en el sello
+        seal.addEventListener('click', function() {
+            closedLetter.style.display = 'none';
+            openLetter.style.display = 'block';
+        });
+        
+        // Mostrar modal al hacer clic en "Sí"
+        yesBtn.addEventListener('click', function() {
+            yesModal.style.display = 'flex';
+        });
+        
+        // Cerrar modal
+        closeModal.addEventListener('click', function() {
+            yesModal.style.display = 'none';
+        });
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        window.addEventListener('click', function(event) {
+            if (event.target === yesModal) {
+                yesModal.style.display = 'none';
+            }
+        });
+        
+        // Hacer que el botón "No" se encoja al hacer clic
+        noBtn.addEventListener('click', function() {
+            this.classList.add('shrink');
+            
+            // Después de que termine la animación, mover el botón a una posición aleatoria
+            setTimeout(() => {
+                if (this.classList.contains('shrink')) {
+                    this.classList.remove('shrink');
+                    
+                    // Posición aleatoria dentro del contenedor
+                    const container = document.querySelector('.response-container');
+                    const containerRect = container.getBoundingClientRect();
+                    
+                    const maxX = containerRect.width - this.offsetWidth;
+                    const maxY = containerRect.height - this.offsetHeight;
+                    
+                    const randomX = Math.floor(Math.random() * maxX);
+                    const randomY = Math.floor(Math.random() * maxY);
+                    
+                    this.style.position = 'absolute';
+                    this.style.left = `${randomX}px`;
+                    this.style.top = `${randomY}px`;
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
